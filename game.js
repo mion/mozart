@@ -1,0 +1,33 @@
+////////////////////////////////////////////////////////////////////////////////
+// Our code
+////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////
+// p5.js code
+////////////////////////////////////////////////////////////////////////////////
+function setup() {
+  createCanvas(1000, 1000);
+}
+
+function draw() {
+  // desenhando o retangulo
+  var rectangleX = 30;
+  var rectangleY = 75;
+  var rectangleWidth = 250;
+  var rectangleHeight = 200;
+
+  rect(rectangleX, rectangleY, rectangleWidth, rectangleHeight);
+
+  // desenhando o triangulo
+  var x1 = 30;
+  var y1 = 75;
+
+  var x2 = 58;
+  var y2 = 20;
+
+  var x3 = 86;
+  var y3 = 75;
+
+  triangle(x1, y1, x2, y2, x3, y3);
+}
