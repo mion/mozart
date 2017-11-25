@@ -5,7 +5,7 @@ var Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Body = Matter.Body,
     Vector = Matter.Vector,
-    lg = console.log;
+    log = console.log;
 
 // create an engine
 var engine = Engine.create();
@@ -17,13 +17,17 @@ var render = Render.create({
 });
 
 // create two boxes and a ground
-var boxA = Bodies.rectangle(400, 200, 80, 80);
-var boxB = Bodies.rectangle(450, 50, 80, 80);
-var boxC = Bodies.rectangle(100, 50, 80, 80);
-var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+var bodies = {
+    hero: Bodies.rectangle(300, 200, 50, 50),
+    boxA: Bodies.rectangle(400, 200, 80, 80),
+    boxB: Bodies.rectangle(450, 50, 80, 80),
+    boxC: Bodies.rectangle(100, 50, 80, 80),
+    ground: Bodies.rectangle(400, 610, 810, 60, { isStatic: true }),
+    ground2: Bodies.rectangle(425, 510, 405, 30, { isStatic: true }),
+};
 
 // add all of the bodies to the world
-World.add(engine.world, [boxA, boxB, boxC, ground]);
+World.add(engine.world, _.map(_.values(bodies)));
 
 // run the engine
 Engine.run(engine);
@@ -48,6 +52,55 @@ commands.box = function command_box(x, y, width, height) {
 window['qwe'] = function qwe(prop) {
     return commands[prop];
 };
+
+const _horizontalForce = window['hf'] = 0.01;
+const _verticalForce = window['vf'] = 0.09;
+var isMovingLeft = false;
+var isMovingRight = false;
+
+document.addEventListener('keydown', (event) => {
+    const keyName = event.key;
+    log('key down: ' + keyName);
+    if (keyName === 'j') {
+        isMovingLeft = true;
+    }
+    if (keyName === 'l') {
+        isMovingRight = true;
+    }
+});
+
+let jump = (force) => {
+    Body.applyForce(bodies.hero, bodies.hero.position, Vector.create(0, -1 * force));
+};
+
+document.addEventListener('keyup', (event) => {
+    var verticalForce = _verticalForce / (1 + bodies.hero.angularSpeed);
+    const keyName = event.key;
+    log('key up: ' + keyName);
+    if (keyName === 'k') {
+        jump(verticalForce);
+    }
+    if (keyName === 'j') {
+        isMovingLeft = false;
+    }
+    if (keyName === 'l') {
+        isMovingRight = false;
+    }
+});
+
+const DELAY_MS = 100;
+var interval = window.setInterval(() => {
+    var horizontalForce = _horizontalForce / (1 + bodies.hero.angularSpeed);
+    if (isMovingLeft) {
+        let origin = Vector.create(
+            bodies.hero.position.x - bodies.hero.width,
+            bodies.hero.position.y);
+        Body.applyForce(bodies.hero, bodies.hero.position, Vector.create(-1 * horizontalForce, 0));
+    }
+    if (isMovingRight) {
+        Body.applyForce(bodies.hero, bodies.hero.position, Vector.create(+1 * horizontalForce, 0));
+    }
+}, DELAY_MS);
 //
 //
 ////////////////////////////////////////////////////////////////////////////////
