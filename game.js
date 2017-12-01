@@ -150,10 +150,12 @@ gamepad.on('hold', 'shoulder_bottom_right', e => {
 ////////////////////////////////////////////////////////////////////////////////
 var osc, fft;
 
-var canvasWidth = 1000 / _.keys(frequencyByNote).length;
+var NOTE_LABEL_WIDTH = 20;
+var CANVAS_HEIGHT = 256;
+var CANVAS_WIDTH = NOTE_LABEL_WIDTH * _.keys(frequencyByNote).length;
 
 function setup() {
-  createCanvas(canvasWidth, 256);
+  createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 
   osc = new p5.TriOsc(); // set frequency and type
   osc.amp(music.amplitude);
@@ -164,6 +166,8 @@ function setup() {
 
 function draw() {
   background(255);
+
+  rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   var waveform = fft.waveform();  // analyze the waveform
   beginShape();
