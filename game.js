@@ -113,37 +113,6 @@ var music = {
   amplitude: 0.0
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// Gamepad
-////////////////////////////////////////////////////////////////////////////////
-const gamepad = new Gamepad();
-
-gamepad.on('connect', e => {
-  console.log(`controller ${e.index} connected!`);
-});
-
-gamepad.on('disconnect', e => {
-  console.log(`controller ${e.index} disconnected!`);
-});
-
-gamepad.on('press', 'button_1', () => {
-  console.log('button 1 was pressed!');
-});
-
-gamepad.on('hold', 'button_1', () => {
-  console.log('button 1 is being held!');
-});
-
-gamepad.on('release', 'shoulder_bottom_right', () => {
-  // console.log('button 1 was released!');
-  music.amplitude = 0;
-});
-
-gamepad.on('hold', 'shoulder_bottom_right', e => {
-  // console.log(`shoulder_bottom_right has a value of ${e.value}!`);
-  music.amplitude = e.value;
-});
-
 //
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,6 +124,21 @@ var NOTE_LABEL_WIDTH = 40;
 var CANVAS_HEIGHT = 256;
 var PADDING = 25;
 var CANVAS_WIDTH = 2 * PADDING + NOTE_LABEL_WIDTH * _.keys(frequencyByNote).length;
+
+var notes = _.keys(frequencyByNote);
+var totalNumberOfNotes = notes.length;
+var currentNoteIndex = notes.indexOf('A4');
+console.log('currentNoteIndex', currentNoteIndex);
+console.log('totalNumberOfNotes', totalNumberOfNotes);
+console.log(currentNoteIndex % totalNumberOfNotes);
+
+function currentNote() {
+  return notes[ currentNoteIndex % totalNumberOfNotes ];
+}
+
+function currentFrequency() {
+  return frequencyByNote[currentNote()];
+}
 
 function setup() {
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -171,7 +155,6 @@ function draw() {
 
   rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-  var notes = _.keys(frequencyByNote);
   var index = 0;
   textFont('Hack', 13);
   _.each(notes, (note) => {
@@ -191,7 +174,8 @@ function draw() {
 
   // change oscillator frequency based on mouseX
   // var freq = map(mouseX, 0, width, 40, 880);
-  var freq = frequencyByNote['A4'];
+  // var freq = frequencyByNote['A4'];
+  var freq = currentFrequency();
   // console.log(freq);
   osc.freq(freq);
 
@@ -201,3 +185,44 @@ function draw() {
   text("Amplitude: " + music.amplitude, PADDING, 2 * PADDING, 500, 100); // Text wraps within text box
   text("Frequency: " + freq, PADDING, 3 * PADDING, 500, 100); // Text wraps within text box
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Gamepad
+////////////////////////////////////////////////////////////////////////////////
+const gamepad = new Gamepad();
+
+gamepad.on('connect', e => {
+  console.log(`controller ${e.index} connected!`);
+});
+
+gamepad.on('disconnect', e => {
+  console.log(`controller ${e.index} disconnected!`);
+});
+
+gamepad.on('press', 'button_1', () => {
+  console.log('button 1 was pressed!');
+});
+
+gamepad.on('press', 'button_2', () => {
+  console.log('button 2 was pressed!');
+  currentNoteIndex += 1;
+});
+
+gamepad.on('press', 'button_3', () => {
+  console.log('button 3 was pressed!');
+  currentNoteIndex -= 1;
+});
+
+gamepad.on('hold', 'button_1', () => {
+  console.log('button 1 is being held!');
+});
+
+gamepad.on('release', 'shoulder_bottom_right', () => {
+  // console.log('button 1 was released!');
+  music.amplitude = 0;
+});
+
+gamepad.on('hold', 'shoulder_bottom_right', e => {
+  // console.log(`shoulder_bottom_right has a value of ${e.value}!`);
+  music.amplitude = e.value;
+});
