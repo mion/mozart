@@ -108,11 +108,75 @@ var interval = window.setInterval(() => {
         Body.applyForce(bodies.hero, bodies.hero.position, Vector.create(+1 * horizontalForce, 0));
     }
 }, DELAY_MS);
+
+////////////////////////////////////////////////////////////////////////////////
+// Gamepad
+////////////////////////////////////////////////////////////////////////////////
+
+const gamepad = new Gamepad();
+
+gamepad.on('connect', e => {
+    console.log(`controller ${e.index} connected!`);
+});
+
+gamepad.on('disconnect', e => {
+    console.log(`controller ${e.index} disconnected!`);
+});
+
+gamepad.on('press', 'button_1', () => {
+    console.log('button 1 was pressed!');
+});
+
+gamepad.on('hold', 'button_1', () => {
+    console.log('button 1 is being held!');
+});
+
+gamepad.on('release', 'button_1', () => {
+    console.log('button 1 was released!');
+});
+
+gamepad.on('hold', 'shoulder_bottom_right', e => {
+    console.log(`shoulder_bottom_right has a value of ${e.value}!`);
+});
+
 //
 //
 ////////////////////////////////////////////////////////////////////////////////
 // p5.js code
 ////////////////////////////////////////////////////////////////////////////////
+var osc, fft;
+
+function setup() {
+  createCanvas(720, 256);
+
+  osc = new p5.TriOsc(); // set frequency and type
+  osc.amp(.5);
+
+  fft = new p5.FFT();
+  osc.start();
+}
+
+function draw() {
+  background(255);
+
+  var waveform = fft.waveform();  // analyze the waveform
+  beginShape();
+  strokeWeight(5);
+  for (var i = 0; i < waveform.length; i++){
+    var x = map(i, 0, waveform.length, 0, width);
+    var y = map(waveform[i], -1, 1, height, 0);
+    vertex(x, y);
+  }
+  endShape();
+
+  // change oscillator frequency based on mouseX
+  var freq = map(mouseX, 0, width, 40, 880);
+  osc.freq(freq);
+
+  var amp = map(mouseY, 0, height, 1, .01);
+  osc.amp(amp);
+}
+
 /*
 function setup() {
   createCanvas(1000, 1000);
@@ -138,8 +202,6 @@ function draw() {
   var y3 = 75;
 
   triangle(x1, y1, x2, y2, x3, y3);
-
-  [_.define, [_.x, _.y], [_.*, _.x, _.y]]
 }
 */
 
