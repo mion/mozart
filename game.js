@@ -134,12 +134,13 @@ gamepad.on('hold', 'button_1', () => {
   console.log('button 1 is being held!');
 });
 
-gamepad.on('release', 'button_1', () => {
-  console.log('button 1 was released!');
+gamepad.on('release', 'shoulder_bottom_right', () => {
+  // console.log('button 1 was released!');
+  music.amplitude = 0;
 });
 
 gamepad.on('hold', 'shoulder_bottom_right', e => {
-  console.log(`shoulder_bottom_right has a value of ${e.value}!`);
+  // console.log(`shoulder_bottom_right has a value of ${e.value}!`);
   music.amplitude = e.value;
 });
 
@@ -150,9 +151,10 @@ gamepad.on('hold', 'shoulder_bottom_right', e => {
 ////////////////////////////////////////////////////////////////////////////////
 var osc, fft;
 
-var NOTE_LABEL_WIDTH = 20;
+var NOTE_LABEL_WIDTH = 40;
 var CANVAS_HEIGHT = 256;
-var CANVAS_WIDTH = NOTE_LABEL_WIDTH * _.keys(frequencyByNote).length;
+var PADDING = 25;
+var CANVAS_WIDTH = 2 * PADDING + NOTE_LABEL_WIDTH * _.keys(frequencyByNote).length;
 
 function setup() {
   createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -168,6 +170,14 @@ function draw() {
   background(255);
 
   rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+  var notes = _.keys(frequencyByNote);
+  var index = 0;
+  textFont('Hack', 13);
+  _.each(notes, (note) => {
+    text("(" + note.split("/")[0] + ")", PADDING + index * NOTE_LABEL_WIDTH, PADDING, NOTE_LABEL_WIDTH, 25);
+    index += 1;
+  });
 
   var waveform = fft.waveform();  // analyze the waveform
   beginShape();
@@ -188,6 +198,6 @@ function draw() {
   // var amp = map(mouseY, 0, height, 1, .01);
   osc.amp(music.amplitude);
 
-  text("Amplitude: " + music.amplitude, 10, 10, 200, 100); // Text wraps within text box
-  text("Frequency: " + freq, 10, 50, 200, 100); // Text wraps within text box
+  text("Amplitude: " + music.amplitude, PADDING, 2 * PADDING, 500, 100); // Text wraps within text box
+  text("Frequency: " + freq, PADDING, 3 * PADDING, 500, 100); // Text wraps within text box
 }
