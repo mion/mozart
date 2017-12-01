@@ -125,12 +125,11 @@ var CANVAS_HEIGHT = 256;
 var PADDING = 25;
 var CANVAS_WIDTH = 2 * PADDING + NOTE_LABEL_WIDTH * _.keys(frequencyByNote).length;
 
-var notes = _.keys(frequencyByNote);
+var notes = _.filter(_.keys(frequencyByNote), (note) => {
+  return note.match(/[CGDAE]\d/i);
+});
 var totalNumberOfNotes = notes.length;
 var currentNoteIndex = notes.indexOf('A4');
-console.log('currentNoteIndex', currentNoteIndex);
-console.log('totalNumberOfNotes', totalNumberOfNotes);
-console.log(currentNoteIndex % totalNumberOfNotes);
 
 function currentNote() {
   return notes[ currentNoteIndex % totalNumberOfNotes ];
@@ -183,7 +182,8 @@ function draw() {
   osc.amp(music.amplitude);
 
   text("Amplitude: " + music.amplitude, PADDING, 2 * PADDING, 500, 100); // Text wraps within text box
-  text("Frequency: " + freq, PADDING, 3 * PADDING, 500, 100); // Text wraps within text box
+  text("Note: " + currentNote(), PADDING, 3 * PADDING, 500, 100); // Text wraps within text box
+  text("Frequency: " + freq, PADDING, 4 * PADDING, 500, 100); // Text wraps within text box
 }
 
 ////////////////////////////////////////////////////////////////////////////////
