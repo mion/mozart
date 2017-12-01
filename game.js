@@ -1,4 +1,4 @@
-var noteByFrequency = {
+var frequencyByNote = {
   "C0":	16.35,
   "C#0/Db0": 17.32,
   "D0":	18.35,
@@ -150,8 +150,10 @@ gamepad.on('hold', 'shoulder_bottom_right', e => {
 ////////////////////////////////////////////////////////////////////////////////
 var osc, fft;
 
+var canvasWidth = 1000 / _.keys(frequencyByNote).length;
+
 function setup() {
-  createCanvas(720, 256);
+  createCanvas(canvasWidth, 256);
 
   osc = new p5.TriOsc(); // set frequency and type
   osc.amp(music.amplitude);
@@ -174,8 +176,9 @@ function draw() {
   endShape();
 
   // change oscillator frequency based on mouseX
-  var freq = map(mouseX, 0, width, 40, 880);
-  console.log(freq);
+  // var freq = map(mouseX, 0, width, 40, 880);
+  var freq = frequencyByNote['A4'];
+  // console.log(freq);
   osc.freq(freq);
 
   // var amp = map(mouseY, 0, height, 1, .01);
