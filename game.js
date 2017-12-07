@@ -20,7 +20,12 @@ var engine = Engine.create();
 // create a renderer
 var render = Render.create({
     element: document.body,
-    engine: engine
+    engine: engine,
+    options: {
+        width: 800,
+        height: 600,
+        showAngleIndicator: true
+    }
 });
 
 // create two boxes and a ground
