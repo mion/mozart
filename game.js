@@ -1,3 +1,48 @@
+var world = {
+  creatures: {
+    1: {
+      id: 1,
+      name: 'Robin Hood',
+      player: true,
+      race: 'human',
+      level: 55,
+      life: 100,
+      mana: 100,
+      vigor: 100,
+      items: {
+        head: {
+          id: 95,
+          sku: 325,
+          name: 'Steel Helmet',
+          type: 'helmet',
+          defense: 25
+        },
+        body: null,
+        legs: null,
+        feet: null,
+        leftHand: null,
+        rightHand: null,
+        necklace: null,
+        ring: null,
+        arrows: null,
+        backpack: {
+          id: 23,
+          sku: 439,
+          name: 'Leather Backpack',
+          type: 'container',
+          size: 20,
+          items: [
+            {id: 10, sku: 31, name: 'Gold Coin', type: 'stackable', amount: 32},
+          ]
+        }
+      }
+    },
+  }
+}
+
+
+
+
 /*
 
     http://brm.io/matter-js/docs/classes/Body.html
@@ -100,7 +145,7 @@ document.addEventListener('keyup', (event) => {
     }
 });
 
-const DELAY_MS = 100;
+var DELAY_MS = 100;
 var interval = window.setInterval(() => {
     var horizontalForce = _horizontalForce / (1 + bodies.hero.angularSpeed);
     if (isMovingLeft) {
